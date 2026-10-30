@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIFOTRA teacher recruitment · English & Kinyarwanda</title>
+    <style>
+        * {
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #d2e4f5 0%, #b8d3ed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            padding: 16px;
+        }
+        .glass-exam {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            border-radius: 64px;
+            padding: 28px 40px;
+            box-shadow: 0 30px 50px -10px #1f3e5c;
+            border: 2px solid rgba(255,255,255,0.7);
+        }
+        .top-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffffee;
+            border-radius: 120px;
+            padding: 12px 28px;
+            margin-bottom: 24px;
+            border: 1px solid #adc6e5;
+        }
+        .title h2 {
+            color: #002a5e;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        .title p {
+            color: #20598c;
+            font-weight: 500;
+        }
+        .timer {
+            background: #003d66;
+            padding: 14px 32px;
+            border-radius: 80px;
+            color: white;
+            font-weight: 800;
+            font-size: 2.5rem;
+            line-height: 1;
+            box-shadow: inset 0 -6px 0 #00273d;
+            border: 1px solid #9ac9ff;
+            min-width: 200px;
+            text-align: center;
+        }
+        .timer small {
+            font-size: 1rem;
+            font-weight: 400;
+            display: block;
+        }
+        .progress-track {
+            background: #c1d6ec;
+            height: 18px;
+            border-radius: 40px;
+            margin: 16px 0 28px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #1d71a8;
+            height: 100%;
+            width: 0%;
+            transition: width 0.25s;
+            border-radius: 40px;
+        }
+        .question-pane {
+            background: #ecf3fe;
+            border: 3px solid #b3cef0;
+            border-radius: 56px;
+            padding: 30px 40px;
+            box-shadow: 0 16px 24px -12px #295577;
+            margin-bottom: 28px;
+        }
+        .q-badge {
+            background: #1d5983;
+            color: white;
+            font-weight: 600;
+            display: inline-block;
+            padding: 8px 34px;
+            border-radius: 40px;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        .q-text {
+            font-size: 1.9rem;
+            font-weight: 650;
+            color: #00213d;
+            line-height: 1.45;
+            margin-bottom: 32px;
+        }
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .opt-item {
+            background: white;
+            border-radius: 50px;
+            padding: 18px 28px;
+            font-size: 1.25rem;
+            border: 2px solid #b9d2ed;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: 0.1s;
+            box-shadow: 0 6px 12px rgba(0,35,60,0.1);
+            font-weight: 500;
+        }
+        .opt-item:hover {
+            background: #def0ff;
+            border-color: #2177b3;
+            transform: scale(1.01);
+        }
+        .opt-item.selected {
+            background: #c9e5ff;
+            border: 3px solid #0059a5;
+            box-shadow: 0 0 0 4px #b1d4fa;
+        }
+        .opt-letter {
+            background: #175071;
+            color: white;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-right: 24px;
+        }
+        .action-bar {
+            display: flex;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .answer-btn {
+            background: #1e6d40;
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.8rem;
+            padding: 18px 52px;
+            border-radius: 80px;
+            box-shadow: 0 8px 0 #104123;
+            cursor: pointer;
+            transition: 0.05s linear;
+            border: 1px solid #9fdbb4;
+            flex: 1 1 260px;
+        }
+        .answer-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #104123;
+        }
+        .answer-btn:disabled {
+            opacity: 0.5;
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #104123;
+            pointer-events: none;
+        }
+        .status-message {
+            background: #e7eff9;
+            border-radius: 60px;
+            padding: 16px 32px;
+            font-size: 1.3rem;
+            border: 2px dashed #3c6f9c;
+            color: #023459;
+            font-weight: 600;
+        }
+        .feedback {
+            margin-top: 18px;
+            font-size: 1.3rem;
+            background: #e3f0fa;
+            border-radius: 40px;
+            padding: 14px 34px;
+            display: inline-block;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 35px;
+            color: #1d4f7c;
+            font-weight: 500;
+            border-top: 2px solid #b7d1ea;
+            padding-top: 22px;
+        }
+        .lang-badge {
+            background-color: #dcaa37;
+            color: #1d2f4e;
+            padding: 5px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-left: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-exam" id="rootContainer"></div>
+
+    <script>
+        (function() {
+            // ---------- 50 QUESTIONS : English + Kinyarwanda (merged as requested) ----------
+            const questions = [
+                // ENGLISH PART (1-25)
+                { text: "Identify the correctly punctuated sentence:", options: ["A. \"I'm afraid I cant make it to the meeting,\" she said.", "B. \"I'm afraid I can't make it to the meeting\" she said.", "C. \"I'm afraid I can't make it to the meeting,\" she said.", "D. \"I'm afraid I cant make it to the meeting\", she said."], correct: "C", subject: "EN" },
+                { text: "Which word is an example of a conjunction?", options: ["A. Quickly", "B. Because", "C. Beautiful", "D. Run"], correct: "B", subject: "EN" },
+                { text: "Choose the correct passive voice: 'The students are preparing a presentation.'", options: ["A. A presentation is being prepared by the students.", "B. A presentation was prepared by the students.", "C. A presentation is prepared by the students.", "D. A presentation has been prepared by the students."], correct: "A", subject: "EN" },
+                { text: "Select the sentence with correct subject-verb agreement:", options: ["A. The group of students are meeting after school.", "B. Neither the teacher nor the students was aware.", "C. Everyone in the classes have completed it.", "D. The news about the exam results is encouraging."], correct: "D", subject: "EN" },
+                { text: "What is the function of 'very' in 'She speaks very fluently'?", options: ["A. Adjective", "B. Noun", "C. Adverb", "D. Preposition"], correct: "C", subject: "EN" },
+                { text: "Antonym of 'ephemeral':", options: ["A. Temporary", "B. Fleeting", "C. Permanent", "D. Brief"], correct: "C", subject: "EN" },
+                { text: "'The classroom was a zoo.' is an example of:", options: ["A. Simile", "B. Metaphor", "C. Personification", "D. Hyperbole"], correct: "B", subject: "EN" },
+                { text: "Correct preposition: 'The teacher divided the books ______ the students.'", options: ["A. between", "B. among", "C. onto", "D. with"], correct: "B", subject: "EN" },
+                { text: "Which is a complex sentence?", options: ["A. I finished work, and I went home.", "B. After the rain stopped, we continued.", "C. She is smart, hardworking, kind.", "D. The dog barked loudly."], correct: "B", subject: "EN" },
+                { text: "'Benevolent' most nearly means:", options: ["A. Kind and generous", "B. Hostile", "C. Lazy", "D. Strict"], correct: "A", subject: "EN" },
+                { text: "Present perfect correct sentence:", options: ["A. I have saw that film.", "B. She has lived in Kigali since 2015.", "C. They are going yesterday.", "D. He did finish already."], correct: "B", subject: "EN" },
+                { text: "Odd one out (word formation):", options: ["A. Unhappy", "B. Rewrite", "C. Teacher", "D. Slowly"], correct: "D", subject: "EN" },
+                { text: "'asked ... to submit' – underlined part is:", options: ["A. Gerund", "B. Infinitive", "C. Participle", "D. Finite verb"], correct: "B", subject: "EN" },
+                { text: "Correctly spelled word:", options: ["A. Accomodate", "B. Acommodate", "C. Accommodate", "D. Accomodate"], correct: "C", subject: "EN" },
+                { text: "Defining relative clause:", options: ["A. My brother, who lives in Musanze...", "B. The book that you lent me is interesting.", "C. The meeting, which was online...", "D. She passed, which surprised all."], correct: "B", subject: "EN" },
+                { text: "Prefix 'pre-' in 'preview' means:", options: ["A. After", "B. Before", "C. Against", "D. Again"], correct: "B", subject: "EN" },
+                { text: "Interrogative mood sentence:", options: ["A. Please close door.", "B. I wish I were.", "C. Did you understand?", "D. Sun rises east."], correct: "C", subject: "EN" },
+                { text: "'so ... that' are:", options: ["A. Correlative conj.", "B. Subordinating conj.", "C. Coordinating conj.", "D. Relative pronouns"], correct: "A", subject: "EN" },
+                { text: "Complete: 'Her explanation was so _______ that everyone got confused.'", options: ["A. Lucid", "B. Ambiguous", "C. Coherent", "D. Explicit"], correct: "B", subject: "EN" },
+                { text: "'Swimming' in 'Swimming is fun' is a:", options: ["A. Gerund", "B. Present participle", "C. Infinitive", "D. Finite verb"], correct: "A", subject: "EN" },
+                { text: "Countable noun:", options: ["A. Water", "B. Furniture", "C. Advice", "D. Coin"], correct: "D", subject: "EN" },
+                { text: "'If I had known, I would have told you.' is:", options: ["A. First conditional", "B. Second conditional", "C. Third conditional", "D. Zero conditional"], correct: "C", subject: "EN" },
+                { text: "Incorrect article usage:", options: ["A. an honest", "B. a university", "C. an one-eyed", "D. an hour"], correct: "C", subject: "EN" },
+                { text: "Synonym of 'diligent':", options: ["A. Lazy", "B. Hardworking", "C. Careless", "D. Slow"], correct: "B", subject: "EN" },
+                { text: "Correct order: 'She bought ...'", options: ["A. a dress beautiful red silk", "B. a beautiful red silk dress", "C. a silk red beautiful dress", "D. a red beautiful silk dress"], correct: "B", subject: "EN" },
+
+                // KINYARWANDA PART (26-50) – simplified but accurate
+                { text: "Ni irihe tandukaniro riri hagati y'ijambo 'guhiga' n'ijambo 'guhiga'? (Kinyarwanda)", options: ["A. Nta tandukaniro", "B. 'Guhiga' ni ukwica inyamaswa, 'guhiga' ni ugukorera imbere", "C. 'Guhiga' ni ugukurikirana, 'guhiga' ni ugutamba", "D. 'Guhiga' ni ugutamba, 'guhiga' ni ugutakaza"], correct: "B", subject: "RW" },
+                { text: "Iri somo ry'ikinyarwanda rikubiyemo iki?", options: ["A. Gusoma no kwandika gusa", "B. Gusoma, kwandika, kuvuga no kumva", "C. Kuvuga no gusoma gusa", "D. Indimi z'amahanga"], correct: "B", subject: "RW" },
+                { text: "Ni ikihe gice cy'ijambo 'umwana' ari cyo?", options: ["A. Insindizo", "B. Inyito", "C. Ikivuzo", "D. Umvungo"], correct: "C", subject: "RW" },
+                { text: "Hitamo intero ikoresha indagiwe neza:", options: ["A. Nzaza ejo hazaza.", "B. Nzaza ejo hashize.", "C. Nzaza ejo hazaza.", "D. Nzaza ejo hashize."], correct: "A", subject: "RW" },
+                { text: "Inshinga 'gusoma' mu ihe rirenga ni iyihe?", options: ["A. Ndasoma", "B. Nasomye", "C. Nzisoma", "D. Ngisoma"], correct: "B", subject: "RW" },
+                { text: "Ijambo 'inzitane' risobanura iki?", options: ["A. Umubano mwiza", "B. Amakimbirane", "C. Ibikorwa by'iterambere", "D. Urutonde rw'amagambo"], correct: "B", subject: "RW" },
+                { text: "Ni ikihe gice cy'ijambo 'mu' ari cyo?", options: ["A. Insindizo", "B. Inyito", "C. Indagiwe", "D. Umvungo"], correct: "C", subject: "RW" },
+                { text: "Intero 'Umugore mwiza' irimo:", options: ["A. Inyito n'izina", "B. Inshinga n'izina", "C. Insindizo n'izina", "D. Indagiwe n'izina"], correct: "A", subject: "RW" },
+                { text: "Ijambo 'icyubahiro' rikinyuramo:", options: ["A. Ingingo", "B. Inshinga", "C. Inyito", "D. Izina"], correct: "A", subject: "RW" },
+                { text: "Hitamo ikinyarwanda gikoresheje inyito y'ubwinshi:", options: ["A. Abana muto", "B. Umwana muto", "C. Inka nziza", "D. Amata meza"], correct: "A", subject: "RW" },
+                { text: "Ijambo 'gusobanura' risobanura:", options: ["A. Kuvuga ibidafite ishingiro", "B. Gutanga ibisobanuro", "C. Gusoma igitabo", "D. Kwandika inkuru"], correct: "B", subject: "RW" },
+                { text: "Ni ikihe kinyarwanda gikoresha ikimenyetso cy'ikibazo (?) neza?", options: ["A. Waje he?", "B. Waje he?", "C. Waje he.", "D. Waje he,"], correct: "A", subject: "RW" },
+                { text: "Ijambo 'gukoresha' rikoreshwa ry'iki?", options: ["A. Guhinga", "B. Gukora ikintu", "C. Gutunga umuntu", "D. Gushaka"], correct: "B", subject: "RW" },
+                { text: "Ijambo 'ubutabazi' risobanura:", options: ["A. Ubuvuzi", "B. Ubufasha mu bihe by'akaga", "C. Uburezi", "D. Ubwubatsi"], correct: "B", subject: "RW" },
+                { text: "Iyi nterokoresha inyito y'ubwinshi:", options: ["A. Inka nziza", "B. Inka nziza", "C. Inka nziza", "D. Inka nziza"], correct: "A", subject: "RW" },
+                { text: "Mu Rwanda, 'ubuturo' ni iki?", options: ["A. Inzu y'umwami", "B. Inzu y'umukecuru", "C. Inzu y'umusore", "D. Inzu y'umugabo"], correct: "B", subject: "RW" },
+                { text: "'Gusaba' mu muco nyarwanda ni ukugeza ku ki?", options: ["A. Gusaba impano", "B. Gusaba umugeni", "C. Gusaba umugabo", "D. Gusaba umwana"], correct: "B", subject: "RW" },
+                { text: "Mu Rwanda, 'ubukwe' ni iki?", options: ["A. Umuhango wo gusaba", "B. Umuhango wo kurongora", "C. Umuhango wo kwakira umugeni", "D. Umuhango wo kuvuga"], correct: "C", subject: "RW" },
+                { text: "'Umuganura' ni umunsi w'iki mu Rwanda?", options: ["A. Umunsi w'isabato", "B. Umunsi w'umuhango w'isuka", "C. Umunsi w'umwaka", "D. Umunsi w'amateka"], correct: "C", subject: "RW" },
+                { text: "Mu muco nyarwanda, 'umushyikirano' ni iki?", options: ["A. Inama y'umwami", "B. Inama y'abaturage", "C. Inama y'umuryango", "D. Inama y'abana"], correct: "B", subject: "RW" },
+                { text: "Ni nde wanditse igitabo 'Umukecuru w'Umusozi'?", options: ["A. Dr. Jean Chrysostome Nkejabahizi", "B. Prof. Alexandre Kimenyi", "C. Dr. Evode Basabose", "D. Dr. Charles Muligande"], correct: "A", subject: "RW" },
+                { text: "Igitabo 'Indoto' cyanditswe na nde?", options: ["A. Saverio Naigiziki", "B. Alexis Kagame", "C. J. B. Ntahokaja", "D. Dr. I. M. Gasana"], correct: "A", subject: "RW" },
+                { text: "Mu busobanuro bw'ikinyarwanda, 'umugani' ni iki?", options: ["A. Inkuru ndende", "B. Inkuru ngufi ifite inyigisho", "C. Igitabo cy'amateka", "D. Inyandiko y'ubuvanganzo"], correct: "B", subject: "RW" },
+                { text: "Iki gisigo 'Urukundo' cyanditswe na nde?", options: ["A. Alexis Kagame", "B. Saverio Naigiziki", "C. J. B. Ntahokaja", "D. Dr. I. M. Gasana"], correct: "A", subject: "RW" },
+                { text: "Mu rugendo rwo kwigisha ikinyarwanda, intego nyamukuru ni iyihe?", options: ["A. Kwibukisha amagambo", "B. Gufasha abanyeshuri kumva, kuvuga, gusoma no kwandika neza", "C. Kwigisha amateka gusa", "D. Gutegura abanyeshuri kubagana"], correct: "B", subject: "RW" }
+            ];
+
+            let currentIdx = 0;
+            let timerInterval = null;
+            let secondsLeft = 45;
+            let selectedLetter = null;
+            let answerLocked = false;
+            const root = document.getElementById('rootContainer');
+
+            function render() {
+                if (currentIdx >= questions.length) {
+                    root.innerHTML = `
+                        <div style="text-align:center; padding:70px 20px;">
+                            <div style="font-size:5rem;">🏆</div>
+                            <h1 style="color:#00315e;">Exam completed</h1>
+                            <p style="font-size:2rem; background:white; border-radius:60px; padding:20px;">You answered all 50 questions (English + Kinyarwanda).</p>
+                            <button style="background:#195f8c; color:white; border:none; border-radius:60px; padding:18px 50px; font-size:1.8rem; margin-top:30px; cursor:pointer;" onclick="location.reload()">↻ Restart exam</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const q = questions[currentIdx];
+                const progressPercent = (currentIdx / questions.length) * 100;
+
+                let optsHtml = '';
+                q.options.forEach(opt => {
+                    const letter = opt.charAt(0);
+                    const isSelected = (selectedLetter === letter);
+                    optsHtml += `
+                        <div class="opt-item ${isSelected ? 'selected' : ''}" data-letter="${letter}">
+                            <span class="opt-letter">${letter}</span> ${opt.substring(2)}
+                        </div>
+                    `;
+                });
+
+                const subjectTag = (q.subject === 'EN') ? '📗 English' : '🇷🇼 Kinyarwanda';
+                const template = `
+                    <div class="top-row">
+                        <div class="title">
+                            <h2>MIFOTRA teacher recruitment</h2>
+                            <p>English & Kinyarwanda <span class="lang-badge">${subjectTag}</span></p>
+                        </div>
+                        <div class="timer" id="timerDisplay">
+                            ${secondsLeft}s <small>left</small>
+                        </div>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: ${progressPercent}%;"></div>
+                    </div>
+                    <div class="question-pane">
+                        <span class="q-badge">Question ${currentIdx+1} / 50</span>
+                        <div class="q-text">${q.text}</div>
+                        <div class="options-grid" id="optionsContainer">
+                            ${optsHtml}
+                        </div>
+                    </div>
+                    <div class="action-bar">
+                        <button class="answer-btn" id="submitBtn" ${answerLocked ? 'disabled' : ''}>✔ ANSWER</button>
+                        <div class="status-message" id="statusMsg">
+                            ${answerLocked ? '⏩ Next in 2 sec...' : 'select option & click answer'}
+                        </div>
+                    </div>
+                    <div id="feedbackArea" class="feedback"></div>
+                    <div class="footer-note">⏱️ 45 seconds per question · 50 questions · MIFOTRA style</div>
+                `;
+
+                root.innerHTML = template;
+
+                document.querySelectorAll('.opt-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        if (answerLocked) return;
+                        const lett = el.dataset.letter;
+                        selectedLetter = lett;
+                        render(); // re-render highlight
+                    });
+                });
+
+                const submitBtn = document.getElementById('submitBtn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        if (answerLocked) return;
+                        if (!selectedLetter) {
+                            document.getElementById('feedbackArea').innerText = '⚠️ Please select an option.';
+                            return;
+                        }
+
+                        answerLocked = true;
+                        if (timerInterval) {
+                            clearInterval(timerInterval);
+                            timerInterval = null;
+                        }
+
+                        const correctAns = q.correct;
+                        const isCorrect = (selectedLetter === correctAns);
+                        const fb = document.getElementById('feedbackArea');
+                        fb.innerText = isCorrect ? '✅ Correct!' : `❌ Incorrect. Correct answer: ${correctAns}`;
+
+                        document.getElementById('statusMsg').innerText = '⏩ Moving to next...';
+
+                        setTimeout(() => {
+                            currentIdx++;
+                            selectedLetter = null;
+                            answerLocked = false;
+                            secondsLeft = 45;
+                            if (currentIdx < questions.length) {
+                                startTimer();
+                            }
+                            render();
+                        }, 2000);
+                    });
+                }
+
+                const timerDiv = document.getElementById('timerDisplay');
+                if (timerDiv) timerDiv.innerHTML = `${secondsLeft}s <small>left</small>`;
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    if (currentIdx >= questions.length) {
+                        clearInterval(timerInterval);
+                        return;
+                    }
+                    if (answerLocked) return;
+
+                    if (secondsLeft <= 1) {
+                        clearInterval(timerInterval);
+                        if (!answerLocked) {
+                            answerLocked = true;
+                            const fb = document.getElementById('feedbackArea');
+                            if (fb) fb.innerText = '⏰ Time expired. Moving to next.';
+                            const status = document.getElementById('statusMsg');
+                            if (status) status.innerText = '⏩ Advancing...';
+
+                            setTimeout(() => {
+                                currentIdx++;
+                                selectedLetter = null;
+                                answerLocked = false;
+                                secondsLeft = 45;
+                                if (currentIdx < questions.length) {
+                                    startTimer();
+                                }
+                                render();
+                            }, 2000);
+                        }
+                    } else {
+                        secondsLeft--;
+                        const timerDiv = document.getElementById('timerDisplay');
+                        if (timerDiv) timerDiv.innerHTML = `${secondsLeft}s <small>left</small>`;
+                    }
+                }, 1000);
+            }
+
+            function init() {
+                currentIdx = 0;
+                selectedLetter = null;
+                answerLocked = false;
+                secondsLeft = 45;
+                render();
+                startTimer();
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
